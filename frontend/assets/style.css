@@ -1,0 +1,236 @@
+.transact-purchase_button {
+  margin-bottom: 1.25rem;
+  position: relative;
+  margin-top: -125px;
+  z-index: 1;
+  text-align: center;
+}
+.transact-purchase_button.active {
+  display: block;
+}
+.transact-purchase_button .transact-spacer,
+.transact-purchase_button .transact-fade {
+  padding-top: 125px;
+}
+.transact-purchase_button .transact-fade {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 125px, rgba(255, 255, 255, 1));
+}
+.transact-purchase_button .transact-fade.fade-less {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 180px, rgba(255, 255, 255, 1));
+}
+.transact-purchase_button .transact-fade.fade-disable {
+  background: transparent !important;
+}
+.transact-purchase_button
+  .transact-cta {
+    font-weight: normal;
+    font-size: 11pt;
+    margin-bottom: 10px;
+  }
+.transact-purchase_button
+  .transact_promo {
+    color: #19a5ae;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    font-size: 12pt;
+    margin-bottom: 6px;
+  }
+.transact-purchase_button
+  table {
+    width: 100%;
+    table-layout: auto !important;
+    border: 0;
+  }
+.transact-purchase_button
+  table
+    tr {
+      border: 0;
+    }
+.transact-purchase_button
+  table
+    td {
+      width: 50%;
+      text-align: center;
+      border: 0;
+    }
+.transact-purchase_button
+  .transact_button_container {
+    padding: 6px;
+  }
+.transact-purchase_button
+  .transact_buttons {
+    margin-bottom: 5px;
+    display: inline-block;
+    margin-left: 10px;
+  }
+  
+.no-transact-warning {
+  display: none;
+}
+.no-cookies-warning {
+  display: none;
+}
+
+.transact-purchase_button
+  button.transact-purchase_button__loading {
+    background-color: #19a5ae;
+    font-weight: normal;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: 3px 10px;
+    display: none;
+    font-size: 12px;
+    height: 29px;
+    line-height: 20px;
+    opacity: 0.7;
+  }
+@media (max-width: 779px) {
+  .transact-purchase_button
+    .transact_buttons {
+      width: 100%;
+      margin-left: 0;
+    }
+  .transact-purchase_button
+    button.transact-purchase_button__loading {
+      width: 100%;
+    }
+}
+.transact-purchase_button
+  button.transact-purchase_button__loading
+    i {
+      background-image: url(transact_icon.png);
+      background-repeat: no-repeat;
+      background-size: 12px;
+      background-position: 0 50%;
+      display: inline-block;
+      height: 13px;
+      width: 13px;
+      animation: transact-rotation 2s infinite linear;
+      vertical-align: middle;
+    }
+
+input.transact-donate_amount {
+  padding: 6px 12px !important;
+}
+
+.transact-purchase_button
+  button.transact-purchase_button__btn,
+.transact-purchase_button
+  button.transact-purchase_button__btn:hover,
+.transact-purchase_button
+  button.transact-purchase_button__btn:focus {
+    background-color: #19a5ae;
+    font-weight: normal;
+    border: 1px solid transparent;
+    color: white;
+    font-size: 9pt;
+    white-space: nowrap;
+    border-radius: 2px;
+    padding: 6px 8px;
+    padding-left: 28px;
+    cursor: pointer;
+    background-image: url(transact_icon.png);
+    background-repeat: no-repeat;
+    background-size: 12px;
+    background-position: 9px 50%;
+    width: 100%;
+  }
+.transact-purchase_button
+  button#button_purchase_subscription {
+    background-color: white;
+    color: black;
+  }
+.transact-purchase_button
+  button#button_purchase_donation_loading {
+    width: 100%;
+  }
+
+body.toplevel_page_transact-admin-page input[type='color'] {
+  padding: 0px 2px;
+}
+
+.transact-purchase_modal {
+  position: absolute;
+  top: 105px;
+  background-color: white;
+  width: 100%;
+  max-width: 800px;
+  left: 50%;
+  padding: 0;
+  z-index: 1001;
+  transform: translateX(-50%) translateY(-20px);
+  opacity: 0;
+  transition: opacity 1s, transform 0.5s;
+  -webkit-overflow-scrolling: touch;
+}
+.transact-purchase_modal.transact-show {
+  transform: translateX(-50%) translateY(0px);
+  opacity: 1;
+}
+.transact-purchase_modal iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  overflow-x: hidden;
+}
+.transact-purchase_modal__close-button::before {
+  color: white;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  content: "\00d7";
+  font-size: 30px;
+  line-height: 15px;
+  cursor: pointer;
+}
+.transact-purchase_backdrop {
+  background: black;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  opacity: 0.7;
+}
+
+@keyframes transact-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+.transact-price-input {
+  position: relative;
+  display: block;
+  font-size: 15px;
+}
+.transact-price-input .currency_symbol {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  line-height: 3px;
+  z-index: 10;
+}
+.transact-price-input input.transact-price-input__field {
+  padding-left: 20px !important;
+}
+
+/* SQUARE BUTTON
+    background-color: #19a5ae;
+    border: 0;
+    color: white;
+    font-size: 7pt;
+    border-radius: 2px;
+    padding: 10px 13px;
+    padding-top: 38px;
+    cursor: pointer;
+    background-image: url(transact_icon.png);
+    background-repeat: no-repeat;
+    background-size: 17px;
+    background-position: 50% 14px;
+*/

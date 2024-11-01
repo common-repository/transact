@@ -1,0 +1,247 @@
+<html>
+  <head>
+
+    <script src="https://transact.io/assets/js/transact.js"></script>
+
+    <!-- NOTE transact.js does NOT require jquery,
+    just using jQuery here just to facilitate demo -->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <title>Transact.io  demo page</title>
+
+  </head>
+  <body>
+    <h1>Test API v1</h1>
+
+    <table>
+      <tr><th colspan="2">Server To use</th></tr>
+      <tr>
+        <td><input type="radio" name="server" value="https://transact.io/purchase" checked="checked" onchange="setServer()"></td>
+        <td>https://transact.io/purchase</td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="server" value="http://localhost:5555/purchase" onchange="setServer()"></td>
+        <td>http://localhost:5555/purchase</td>
+      </tr>
+      <tr>
+        <td><input type="radio" name="server" value="OTHER" onchange="setServer()"></td>
+        <td>Other:<input type="text" id="other_server_input" size="70"
+         value="https://test.xsact.com/purchase" onchange="setServer()"></td>
+      </tr>
+
+    </table>
+
+    Affiliate ID:
+    <input type="text" id="affiliate_id" name="affiliate_id" value="" onchange="updatePurchaseToken()">
+
+    <br>
+    <br>
+    <button onclick="doPurchase()">Purchase on Transact.io</button>
+    <button onclick="doSubscription('DAILY')">Subscribe Day Pass</button>
+    <button onclick="doSubscription('MONTHLY')">Subscribe Monthly plan</button>
+    <button onclick="doSubscription('YEARLY')">Subscribe Annual plan</button>
+    <hr>
+    <button onclick="doDonate()">Donate</button>
+    Donate:<input type="number" name="donate" id="donate_val" onchange="setDonateAmount()" value="10"></td>
+    <hr>
+    <p>
+    <div id='paid_content'>
+      <span style="color:red">
+        Paid content here after purchase
+      </span>
+    </div>
+    <div id='has_subscription'>
+      <span>
+        Subscription Status unknown
+      </span>
+    </div>
+
+    <div id='promo_message'>
+      <span>
+       PROMO_HERE
+      </span>
+    </div>
+  <script>
+    var package = {};
+    var purchase_token = {}; // token used for buying single item
+    var subscribe_token = {}; // subscription
+    var donate_token = {};
+
+
+    function setDonateAmount() {
+      var donate = $('#donate_val').val();
+      console.log('setDonateAmount', donate);
+
+      if (!donate) {
+        alert('invalid donation amount');
+        return;
+      }
+      // get token for us
+      var data = {
+        'action' : 'getDonateToken',
+        'price' : donate,
+        'url' : document.location.href
+      };
+      $.getJSON("demo-api.php", data)
+      .done(function(data) {
+        console.log('got donate_token: '+ data.token);
+        donate_token = data.token;
+      })
+      .fail(function(resp_data) {
+        console.log('Error Response data:', resp_data);
+        alert('failed to get donate_token');
+      });
+
+
+    }
+    // set the server weather we are using development / test server or prod
+    // Note users of this library probably never have to set this, you will
+    // always use transact.io
+    function setServer() {
+      console.log('setServer');
+      var server = $('input[name=server]:checked').val();
+      if (server == 'OTHER') {
+        // Other selected, read other input
+        server = $('#other_server_input').val();
+      }
+      transactApi.setFrontendUrl(server);
+    }
+
+    function updatePurchaseToken() {
+      // get token for us
+      var data = { 'action' : 'getToken', url : document.location.href };
+
+      var affiliate_id = $('#affiliate_id').val().trim();
+      if (affiliate_id && affiliate_id == parseInt(affiliate_id)) {
+        data['affiliate_id'] = affiliate_id;
+        console.log('setting affiliate_id', affiliate_id);
+      }
+
+      $.getJSON("demo-api.php", data)
+      .done(function(data) {
+        console.log('got purchase_token: '+ data.token);
+        purchase_token = data.token;
+      })
+      .fail(function(resp_data) {
+          console.log('Error Response data:', resp_data);
+          alert('failed to get sessionId');
+      });
+    }
+
+    function updatePromoMessage() {
+      let promo = transactApi.getCurrentPromo('en', function(error, promo) {
+
+        if (error) {
+          console.log('ERROR fetching promo', error);
+          return;
+        }
+        document.getElementById('promo_message').innerHTML = promo.text;
+      });
+
+    }
+
+
+    $( document ).ready(function() {
+      setServer(); // init
+      setDonateAmount();
+      updatePurchaseToken();
+      updatePromoMessage();
+      getSubscriptionToken('DAILY');
+      getSubscriptionToken('MONTHLY');
+      getSubscriptionToken('YEARLY');
+
+    });
+
+    function getSubscriptionToken(period) {
+
+      var data = {
+        'action' : 'getSubscriptionToken',
+        'period' : period,
+        url : document.location.href
+      };
+
+      $.getJSON("demo-api.php", data)
+      .done(function(data) {
+        console.log('got subscribe_token: ' + period + ' : ' + data.token);
+        subscribe_token[period] = data.token;
+      })
+      .fail(function(resp_data) {
+          console.log('Error Response data:', resp_data);
+          alert('failed to get sessionId');
+      });
+
+    }
+
+
+    function doPurchase() {
+      console.log('doPurchase');
+
+      transactApi.setToken(purchase_token);
+
+      // Call authorize() which will load the popup,
+      // passing in callback function (PurchasePopUpClosed)
+      transactApi.authorize(PurchasePopUpClosed);
+    }
+
+    function doDonate() {
+      console.log('doDonate');
+
+      transactApi.setToken(donate_token);
+
+      // Call authorize() which will load the popup,
+      // passing in callback function (PurchasePopUpClosed)
+      transactApi.authorize(PurchasePopUpClosed);
+    }
+
+
+    function doSubscription(period) {
+      console.log('demo: doPurchase');
+
+      transactApi.setToken(subscribe_token[period]);
+
+      // Call authorize() which will load the popup,
+      // passing in callback function (PurchasePopUpClosed)
+      transactApi.authorize(PurchasePopUpClosed);
+    }
+
+    function PurchasePopUpClosed(popup, event) {
+      console.log('demo: PurchasePopUpClosed');
+      console.log(popup);
+      console.log('event', event);
+
+      if (event && event.data) {
+        console.log('event data', event.data);
+        var validation_data = event.data;
+        validation_data.action = 'getPurchasedContent';
+
+        var jqxhr = $.getJSON("demo-api.php", validation_data)
+        .done(function(resp_data) {
+          console.log('Response data:', resp_data);
+          if (resp_data.status == 'OK') {
+            $('#paid_content').html(resp_data.content);
+
+            var sub_content = 'NO Subscription';
+            if (resp_data.subscription) {
+              sub_content = 'HAS Subscription';
+            }
+            $('#has_subscription').html(sub_content);
+
+          } else if (resp_data.status == 'ERROR')
+            $('#paid_content').html(resp_data.message);
+          else
+            $('#paid_content').html('Unexpected error');
+        })
+        .fail(function(resp_data) {
+          console.log('Error Response data:', resp_data);
+          $('#paid_content').html('purchase failed');
+        })
+        .always(function() {
+          console.log( "finished" );
+        });
+
+      }
+    }
+
+  </script>
+
+  </body>
+</html>

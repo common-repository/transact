@@ -1,0 +1,13 @@
+{
+    "name": "transact/transact-io-php",
+    "description":  "Transact.io PHP integration library",
+    "authors": [
+        {
+            "name": "Karl",
+            "email": "karl@xsact.com"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^4.0"
+    }
+}

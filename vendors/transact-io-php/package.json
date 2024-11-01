@@ -1,0 +1,15 @@
+{
+  "name": "transact-php",
+  "version": "1.0.0",
+  "description": "PHP library for transact.io micropayments",
+  "main": "transact-io.php",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "phplint": "phplint \"**/*.php\" \"!vendor/**\"  \"!node_modules/**\" "
+  },
+  "author": "",
+  "license": "(MIT OR Apache-2.0)",
+  "devDependencies": {
+    "phplint": "^1.7.1"
+  }
+}
